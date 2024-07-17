@@ -87,9 +87,23 @@ public class InitializerJSPMySQL extends JFrame {
         setVisible(true);
     }
 
+    private void disabilitaCampi() {
+        campoGroupId.setEditable(false);
+        campoArtifactId.setEditable(false);
+        pulsanteCrea.setEnabled(false);
+        pulsanteInstall.setEnabled(false);
+    }
+
+    private void abilitaCampi() {
+        campoGroupId.setEditable(true);
+        campoArtifactId.setEditable(true);
+        pulsanteCrea.setEnabled(true);
+        pulsanteInstall.setEnabled(true);
+    }
+
     private void creaProgetto() {
         pulsanteCrea.setText("Attendi...");
-        pulsanteCrea.setEnabled(false);
+        disabilitaCampi();
         areaOutput.setText("");
 
         SwingWorker<Void, String> lavoratore = new SwingWorker<>() {
@@ -133,7 +147,7 @@ public class InitializerJSPMySQL extends JFrame {
             @Override
             protected void done() {
                 pulsanteCrea.setText("Crea Progetto");
-                pulsanteCrea.setEnabled(true);
+                abilitaCampi();
             }
 
             private void aggiornaPomXml(String artifactId) {
@@ -213,7 +227,8 @@ public class InitializerJSPMySQL extends JFrame {
     }
 
     private void eseguiMvnCleanInstall() {
-        pulsanteInstall.setEnabled(false);
+        pulsanteInstall.setText("Attendi...");
+        disabilitaCampi();
         areaOutput.setText("");
 
         SwingWorker<Void, String> lavoratore = new SwingWorker<>() {
@@ -252,7 +267,8 @@ public class InitializerJSPMySQL extends JFrame {
 
             @Override
             protected void done() {
-                pulsanteInstall.setEnabled(true);
+                pulsanteInstall.setText("mvn clean install");
+                abilitaCampi();
             }
         };
 
