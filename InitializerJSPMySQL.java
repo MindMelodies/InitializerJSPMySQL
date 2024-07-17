@@ -12,7 +12,7 @@ public class InitializerJSPMySQL extends JFrame {
 
     public InitializerJSPMySQL() {
         setTitle("Creatore di Progetti JSP con dipendenze MYSQL");
-        setSize(500, 400);
+        setSize(1500, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
 
