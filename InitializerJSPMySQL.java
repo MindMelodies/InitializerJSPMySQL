@@ -2,6 +2,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import java.nio.file.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.net.URI;
 
 public class InitializerJSPMySQL extends JFrame {
     private JTextField campoGroupId;
@@ -24,7 +27,7 @@ public class InitializerJSPMySQL extends JFrame {
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.weightx = 0.0;
-        pannelloInput.add(new JLabel("ID Gruppo:"), gbc);
+        pannelloInput.add(new JLabel("<html><b>ID Gruppo:</b></html>"), gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 0;
@@ -35,7 +38,7 @@ public class InitializerJSPMySQL extends JFrame {
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.weightx = 0.0;
-        pannelloInput.add(new JLabel("ID Artefatto:"), gbc);
+        pannelloInput.add(new JLabel("<html><b>ID Artefatto:</b></html"), gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 1;
@@ -66,7 +69,18 @@ public class InitializerJSPMySQL extends JFrame {
         JScrollPane pannelloScorrimento = new JScrollPane(areaOutput);
         add(pannelloScorrimento, BorderLayout.CENTER);
 
-        JLabel copyright = new JLabel("Creato con ❤ da github.com/MindMelodies e Claude-3.5-Sonnet-200k");
+        JLabel copyright = new JLabel("<html><b>Creato con <font color='red'>❤</font> da <font color='blue'>@MindMelodies</font> e Claude-3.5-Sonnet-200k</b></html>");
+        copyright.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        copyright.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                try {
+                    Desktop.getDesktop().browse(new URI("https://github.com/MindMelodies"));
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
         copyright.setHorizontalAlignment(JLabel.CENTER);
         add(copyright, BorderLayout.SOUTH);
 
