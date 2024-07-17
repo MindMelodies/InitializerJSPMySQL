@@ -44,7 +44,7 @@ public class InitializerJSPMySQL extends JFrame {
         pannelloInput.add(campoArtifactId, gbc);
 
         JPanel pannelloPulsanti = new JPanel(new GridLayout(1, 2, 5, 0));
-        
+
         pulsanteCrea = new JButton("Crea Progetto");
         pulsanteCrea.addActionListener(e -> creaProgetto());
         pannelloPulsanti.add(pulsanteCrea);
@@ -66,7 +66,6 @@ public class InitializerJSPMySQL extends JFrame {
         JScrollPane pannelloScorrimento = new JScrollPane(areaOutput);
         add(pannelloScorrimento, BorderLayout.CENTER);
 
-        // Aggiunta del copyright
         JLabel copyright = new JLabel("Creato con ❤ da github.com/MindMelodies e Claude-3.5-Sonnet-200k");
         copyright.setHorizontalAlignment(JLabel.CENTER);
         add(copyright, BorderLayout.SOUTH);
@@ -85,10 +84,12 @@ public class InitializerJSPMySQL extends JFrame {
                 String groupId = campoGroupId.getText();
                 String artifactId = campoArtifactId.getText();
 
-                String comando = String.format("mvn archetype:generate -DarchetypeArtifactId=maven-archetype-webapp -DgroupId=%s -DartifactId=%s -DinteractiveMode=false", groupId, artifactId);
+                String comando = String.format(
+                        "mvn archetype:generate -DarchetypeArtifactId=maven-archetype-webapp -DgroupId=%s -DartifactId=%s -DinteractiveMode=false",
+                        groupId, artifactId);
 
                 try {
-                    Process processo = Runtime.getRuntime().exec(new String[]{"cmd", "/c", comando});
+                    Process processo = Runtime.getRuntime().exec(new String[] { "cmd", "/c", comando });
                     BufferedReader lettore = new BufferedReader(new InputStreamReader(processo.getInputStream()));
                     String linea;
                     while ((linea = lettore.readLine()) != null) {
@@ -125,42 +126,41 @@ public class InitializerJSPMySQL extends JFrame {
                 Path percorsoPom = Paths.get(artifactId, "pom.xml");
                 try {
                     String contenuto = new String(Files.readAllBytes(percorsoPom));
-                    String nuoveDipendenze = 
-                        "  <dependencies>\n" +
-                        "    <dependency>\n" +
-                        "      <groupId>junit</groupId>\n" +
-                        "      <artifactId>junit</artifactId>\n" +
-                        "      <version>4.11</version>\n" +
-                        "      <scope>test</scope>\n" +
-                        "    </dependency>\n" +
-                        "    <dependency>\n" +
-                        "      <groupId>javax.servlet</groupId>\n" +
-                        "      <artifactId>jstl</artifactId>\n" +
-                        "      <version>1.2</version>\n" +
-                        "    </dependency>\n" +
-                        "\n" +
-                        "    <!-- Dipendenza JSTL SQL -->\n" +
-                        "    <dependency>\n" +
-                        "      <groupId>taglibs</groupId>\n" +
-                        "      <artifactId>standard</artifactId>\n" +
-                        "      <version>1.1.2</version>\n" +
-                        "    </dependency>\n" +
-                        "\n" +
-                        "    <!-- Dipendenza MySQL Connector -->\n" +
-                        "    <dependency>\n" +
-                        "      <groupId>mysql</groupId>\n" +
-                        "      <artifactId>mysql-connector-java</artifactId>\n" +
-                        "      <version>8.0.26</version>\n" +
-                        "    </dependency>\n" +
-                        "\n" +
-                        "    <!-- Dipendenza Servlet API (fornita dal container) -->\n" +
-                        "    <dependency>\n" +
-                        "      <groupId>javax.servlet</groupId>\n" +
-                        "      <artifactId>javax.servlet-api</artifactId>\n" +
-                        "      <version>4.0.1</version>\n" +
-                        "      <scope>provided</scope>\n" +
-                        "    </dependency>\n" +
-                        "  </dependencies>";
+                    String nuoveDipendenze = "  <dependencies>\n" +
+                            "    <dependency>\n" +
+                            "      <groupId>junit</groupId>\n" +
+                            "      <artifactId>junit</artifactId>\n" +
+                            "      <version>4.11</version>\n" +
+                            "      <scope>test</scope>\n" +
+                            "    </dependency>\n" +
+                            "    <dependency>\n" +
+                            "      <groupId>javax.servlet</groupId>\n" +
+                            "      <artifactId>jstl</artifactId>\n" +
+                            "      <version>1.2</version>\n" +
+                            "    </dependency>\n" +
+                            "\n" +
+                            "    <!-- Dipendenza JSTL SQL -->\n" +
+                            "    <dependency>\n" +
+                            "      <groupId>taglibs</groupId>\n" +
+                            "      <artifactId>standard</artifactId>\n" +
+                            "      <version>1.1.2</version>\n" +
+                            "    </dependency>\n" +
+                            "\n" +
+                            "    <!-- Dipendenza MySQL Connector -->\n" +
+                            "    <dependency>\n" +
+                            "      <groupId>mysql</groupId>\n" +
+                            "      <artifactId>mysql-connector-java</artifactId>\n" +
+                            "      <version>8.0.26</version>\n" +
+                            "    </dependency>\n" +
+                            "\n" +
+                            "    <!-- Dipendenza Servlet API (fornita dal container) -->\n" +
+                            "    <dependency>\n" +
+                            "      <groupId>javax.servlet</groupId>\n" +
+                            "      <artifactId>javax.servlet-api</artifactId>\n" +
+                            "      <version>4.0.1</version>\n" +
+                            "      <scope>provided</scope>\n" +
+                            "    </dependency>\n" +
+                            "  </dependencies>";
 
                     contenuto = contenuto.replaceFirst("<dependencies>[\\s\\S]*?</dependencies>", nuoveDipendenze);
                     Files.write(percorsoPom, contenuto.getBytes());
@@ -173,20 +173,19 @@ public class InitializerJSPMySQL extends JFrame {
             private void aggiornaWebXml(String artifactId) {
                 Path percorsoWebXml = Paths.get(artifactId, "src", "main", "webapp", "WEB-INF", "web.xml");
                 try {
-                    String nuovoContenuto = 
-                        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                        "<web-app xmlns=\"http://xmlns.jcp.org/xml/ns/javaee\" \n" +
-                        "         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
-                        "         xsi:schemaLocation=\"http://xmlns.jcp.org/xml/ns/javaee\n" +
-                        "         http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd\"\n" +
-                        "         version=\"3.1\">\n" +
-                        "  <resource-ref>\n" +
-                        "    <description>Connessione DB</description>\n" +
-                        "    <res-ref-name>jdbc/MySQLDB</res-ref-name>\n" +
-                        "    <res-type>javax.sql.DataSource</res-type>\n" +
-                        "    <res-auth>Container</res-auth>\n" +
-                        "  </resource-ref>\n" +
-                        "</web-app>";
+                    String nuovoContenuto = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                            "<web-app xmlns=\"http://xmlns.jcp.org/xml/ns/javaee\" \n" +
+                            "         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
+                            "         xsi:schemaLocation=\"http://xmlns.jcp.org/xml/ns/javaee\n" +
+                            "         http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd\"\n" +
+                            "         version=\"3.1\">\n" +
+                            "  <resource-ref>\n" +
+                            "    <description>Connessione DB</description>\n" +
+                            "    <res-ref-name>jdbc/MySQLDB</res-ref-name>\n" +
+                            "    <res-type>javax.sql.DataSource</res-type>\n" +
+                            "    <res-auth>Container</res-auth>\n" +
+                            "  </resource-ref>\n" +
+                            "</web-app>";
 
                     Files.write(percorsoWebXml, nuovoContenuto.getBytes());
                     publish("\nFile web.xml aggiornato con il nuovo contenuto.");
