@@ -2,6 +2,10 @@
 
 InitializerJSPMySQL è un'applicazione Java con interfaccia grafica che semplifica la creazione e l'inizializzazione di progetti web JSP con supporto per MySQL.
 
+## Schermata
+
+![alt text](schermata.png)
+
 ## Caratteristiche
 
 - Interfaccia grafica intuitiva
