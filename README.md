@@ -31,7 +31,9 @@ nome-progetto/
 ├── src/
 │   └── main/
 │       ├── java/
+│       ├── resources/
 │       └── webapp/
+│           ├── index.jsp
 │           └── WEB-INF/
 │               └── web.xml
 └── pom.xml
