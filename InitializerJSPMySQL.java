@@ -13,63 +13,131 @@ public class InitializerJSPMySQL extends JFrame {
     private JButton pulsanteInstall;
     private JTextArea areaOutput;
 
+    private final Color COLOR_BACKGROUND = new Color(245, 245, 250);
+    private final Color COLOR_PANEL = new Color(255, 255, 255);
+    private final Color COLOR_TEXT = new Color(0, 0, 0);
+    private final Color COLOR_ACCENT = new Color(33, 150, 243);
+    private final Color COLOR_BUTTON = new Color(76, 175, 80);
+    private final Color COLOR_BUTTON_PRESSED = new Color(56, 142, 60);
+
     public InitializerJSPMySQL() {
         setTitle("Creatore di Progetti JSP con dipendenze MYSQL");
-        setSize(600, 600);
+        setSize(700, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
+        getContentPane().setBackground(COLOR_BACKGROUND);
 
+        JPanel pannelloInput = createInputPanel();
+        add(pannelloInput, BorderLayout.NORTH);
+
+        areaOutput = createOutputArea();
+        JScrollPane pannelloScorrimento = new JScrollPane(areaOutput);
+        pannelloScorrimento.setBorder(BorderFactory.createEmptyBorder());
+        add(pannelloScorrimento, BorderLayout.CENTER);
+
+        JLabel copyright = createCopyrightLabel();
+        add(copyright, BorderLayout.SOUTH);
+
+        setVisible(true);
+    }
+
+    private JPanel createInputPanel() {
         JPanel pannelloInput = new JPanel(new GridBagLayout());
+        pannelloInput.setBackground(COLOR_PANEL);
+        pannelloInput.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 5, 5, 5);
 
+        addLabelAndTextField(pannelloInput, gbc, "ID Gruppo:", "com.tuodominio");
+        addLabelAndTextField(pannelloInput, gbc, "ID Artefatto:", "nome-progetto");
+        addButtons(pannelloInput, gbc);
+
+        return pannelloInput;
+    }
+
+    private void addLabelAndTextField(JPanel panel, GridBagConstraints gbc, String labelText, String defaultText) {
         gbc.gridx = 0;
-        gbc.gridy = 0;
+        gbc.gridy++;
         gbc.weightx = 0.0;
-        pannelloInput.add(new JLabel("<html><b>ID Gruppo:</b></html>"), gbc);
+        JLabel label = new JLabel("<html><b>" + labelText + "</b></html>");
+        label.setForeground(COLOR_TEXT);
+        panel.add(label, gbc);
 
         gbc.gridx = 1;
-        gbc.gridy = 0;
         gbc.weightx = 1.0;
-        campoGroupId = new JTextField("com.tuodominio", 20);
-        pannelloInput.add(campoGroupId, gbc);
+        JTextField textField = new JTextField(defaultText, 20);
+        textField.setBackground(COLOR_PANEL);
+        textField.setForeground(COLOR_TEXT);
+        textField.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(COLOR_ACCENT),
+                BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+        panel.add(textField, gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.weightx = 0.0;
-        pannelloInput.add(new JLabel("<html><b>ID Artefatto:</b></html"), gbc);
+        if (labelText.contains("Gruppo")) {
+            campoGroupId = textField;
+        } else {
+            campoArtifactId = textField;
+        }
+    }
 
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        gbc.weightx = 1.0;
-        campoArtifactId = new JTextField("nome-progetto", 20);
-        pannelloInput.add(campoArtifactId, gbc);
+    private void addButtons(JPanel panel, GridBagConstraints gbc) {
+        JPanel pannelloPulsanti = new JPanel(new GridLayout(1, 2, 10, 0));
+        pannelloPulsanti.setOpaque(false);
 
-        JPanel pannelloPulsanti = new JPanel(new GridLayout(1, 2, 5, 0));
-
-        pulsanteCrea = new JButton("Crea Progetto");
+        pulsanteCrea = createStyledButton("Crea Progetto", COLOR_BUTTON);
         pulsanteCrea.addActionListener(e -> creaProgetto());
         pannelloPulsanti.add(pulsanteCrea);
 
-        pulsanteInstall = new JButton("mvn clean install");
+        pulsanteInstall = createStyledButton("mvn clean install", COLOR_ACCENT);
         pulsanteInstall.addActionListener(e -> eseguiMvnCleanInstall());
         pannelloPulsanti.add(pulsanteInstall);
 
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy++;
         gbc.gridwidth = 2;
         gbc.weightx = 1.0;
-        pannelloInput.add(pannelloPulsanti, gbc);
+        panel.add(pannelloPulsanti, gbc);
+    }
 
-        add(pannelloInput, BorderLayout.NORTH);
+    private JButton createStyledButton(String text, Color bgColor) {
+        JButton button = new JButton(text);
+        button.setBackground(bgColor);
+        button.setForeground(Color.BLACK);
+        button.setFocusPainted(false);
+        button.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
+        button.setFont(button.getFont().deriveFont(Font.BOLD));
+        button.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent evt) {
+                button.setBackground(bgColor.darker());
+            }
+            public void mouseExited(MouseEvent evt) {
+                button.setBackground(bgColor);
+            }
+            public void mousePressed(MouseEvent evt) {
+                button.setBackground(COLOR_BUTTON_PRESSED);
+                button.setForeground(new Color(220, 220, 220));
+            }
+            public void mouseReleased(MouseEvent evt) {
+                button.setBackground(bgColor);
+                button.setForeground(Color.BLACK);
+            }
+        });
+        return button;
+    }
 
-        areaOutput = new JTextArea();
-        areaOutput.setEditable(false);
-        JScrollPane pannelloScorrimento = new JScrollPane(areaOutput);
-        add(pannelloScorrimento, BorderLayout.CENTER);
+    private JTextArea createOutputArea() {
+        JTextArea area = new JTextArea();
+        area.setEditable(false);
+        area.setBackground(COLOR_PANEL);
+        area.setForeground(COLOR_TEXT);
+        area.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        area.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        return area;
+    }
 
-        JLabel copyright = new JLabel("<html><b>Creato con <font color='red'>❤</font> da <font color='blue'>@MindMelodies</font> e Claude-3.5-Sonnet-200k</b></html>");
+    private JLabel createCopyrightLabel() {
+        JLabel copyright = new JLabel("<html><b>Creato con <font color='red'>❤</font> da <font color='" + String.format("#%06x", COLOR_ACCENT.getRGB() & 0xFFFFFF) + "'>@MindMelodies</font> e Claude-3.5-Sonnet-200k</b></html>");
         copyright.setCursor(new Cursor(Cursor.HAND_CURSOR));
         copyright.addMouseListener(new MouseAdapter() {
             @Override
@@ -82,9 +150,10 @@ public class InitializerJSPMySQL extends JFrame {
             }
         });
         copyright.setHorizontalAlignment(JLabel.CENTER);
-        add(copyright, BorderLayout.SOUTH);
-
-        setVisible(true);
+        copyright.setOpaque(true);
+        copyright.setBackground(COLOR_PANEL);
+        copyright.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+        return copyright;
     }
 
     private void disabilitaCampi() {
